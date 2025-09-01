@@ -9,8 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@firebase/firestore": "^4.5.0",
-    "@firebase/storage": "^0.12.2",
     "@headlessui/react": "^2.0.3",
     "@headlessui/tailwindcss": "^0.2.0",
     "@heroicons/react": "^2.1.1",
