@@ -1,7 +1,5 @@
 import OpenAI from "openai";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
 export async function POST(req: Request) {
   if (req.method !== "POST") {
     return new Response(
@@ -12,6 +10,11 @@ export async function POST(req: Request) {
     );
   }
 
+  // Initialize OpenAI client *inside* the handler
+  const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+
   const messages = await req.json();
 
   const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
@@ -20,10 +23,7 @@ export async function POST(req: Request) {
       function: {
         name: "search",
         description: "Search for information based on a query",
-        parameters: {
-          type: "object",
-          properties: {},
-        },
+        parameters: { type: "object", properties: {} },
       },
     },
     {
@@ -82,26 +82,24 @@ export async function POST(req: Request) {
         },
       },
     },
-    // Add more functions as needed
   ];
 
   try {
     const response = await openai.chat.completions.create({
       model: "gpt-3.5-turbo-0125",
-      messages: messages,
+      messages,
       tools,
       tool_choice: "auto",
     });
 
-    // Check if tool_calls are present in the response
     const toolCalls = response.choices[0].message?.tool_calls;
+
     if (!toolCalls) {
       return new Response(JSON.stringify({ mode: "chat", arg: "" }), {
         status: 200,
       });
     }
 
-    // Process the tool calls if present
     const firstToolCall = toolCalls[0];
     const modeAndArguments =
       Object.keys(firstToolCall.function.arguments).length === 2
