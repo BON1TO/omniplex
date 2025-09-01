@@ -11,7 +11,13 @@ const nextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
   },
-  transpilePackages: ["firebase"], // added here
+  transpilePackages: ["firebase"],
+
+  // 🚀 Add this
+  experimental: {
+    optimizeCss: false,
+    optimizePackageImports: [],
+  },
 };
 
 export default nextConfig;
