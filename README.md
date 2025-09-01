@@ -128,7 +128,7 @@ export const MODELS = [
 
 > We recently transitioned from the pages directory to the app directory, which involved significant changes to the project structure and architecture. As a result, you may encounter some inconsistencies or rough edges in the codebase.
 
-### Roadmap
+### RoadMap 
 
 - [x] Images & Videos for Search
 - [x] Upload for Vision Model
