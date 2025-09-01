@@ -14,7 +14,6 @@ export async function POST(req: Request) {
     presence_penalty,
   } = await req.json();
 
-  // Initialize OpenAI client at runtime (not at build)
   const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
   });
@@ -30,6 +29,8 @@ export async function POST(req: Request) {
     messages,
   });
 
-  const stream = OpenAIStream(response);
+  // force any type here if TypeScript complains
+  const stream = OpenAIStream(response as any);
+
   return new StreamingTextResponse(stream);
 }

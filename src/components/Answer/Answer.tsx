@@ -11,6 +11,9 @@ import { Citation } from "@/utils/types";
 
 import Logo from "../../../public/Logo.svg";
 
+// Fix typing issue with SyntaxHighlighter
+const TypedSyntaxHighlighter: React.FC<any> = SyntaxHighlighter as any;
+
 type Props = {
   error: string;
   answer: string;
@@ -65,10 +68,10 @@ const Answer = (props: Props) => {
             rehypePlugins={[rehypeKatex, rehypeRaw]}
             components={{
               code(props) {
-                const { children, className, node, ...rest } = props;
+                const { children, className, ...rest } = props;
                 const match = /language-(\w+)/.exec(className || "");
                 return match ? (
-                  <SyntaxHighlighter
+                  <TypedSyntaxHighlighter
                     PreTag="div"
                     language={match[1]}
                     style={dark}
@@ -79,7 +82,7 @@ const Answer = (props: Props) => {
                     }}
                   >
                     {String(children).replace(/\n$/, "")}
-                  </SyntaxHighlighter>
+                  </TypedSyntaxHighlighter>
                 ) : (
                   <code className={styles.code}>{children}</code>
                 );

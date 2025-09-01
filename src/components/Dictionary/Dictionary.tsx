@@ -11,15 +11,15 @@ type DictionaryProps = {
 };
 
 const Dictionary = ({ dictionaryResults }: DictionaryProps) => {
-  const animationRefs = useRef<any[]>([]);
+  const animationRefs = useRef<(Player | null)[]>([]);
 
   const handlePlaySound = (audioUrl: string, index: number) => {
     if (audioUrl) {
       const audio = new Audio(audioUrl);
       audio.play();
-      animationRefs.current[index].play();
+      animationRefs.current[index]?.play();
       audio.onended = () => {
-        animationRefs.current[index].pause();
+        animationRefs.current[index]?.pause();
       };
     }
   };
@@ -30,30 +30,32 @@ const Dictionary = ({ dictionaryResults }: DictionaryProps) => {
         <div className={styles.dictionaryContainer}>
           <div className={styles.wordBlock}>
             <div className={styles.word}>{dictionaryResults.word}</div>
-            {dictionaryResults.phonetics?.map((phonetic, index) => {
-              return (
-                <div className={styles.phonetic} key={index}>
-                  {phonetic.audio && (
-                    <div
-                      onClick={() => handlePlaySound(phonetic.audio, index)}
-                      className={styles.audioContainer}
-                    >
-                      <Player
-                        src={AudioLottie}
-                        ref={(el) => (animationRefs.current[index] = el)}
-                        loop={false}
-                        autoplay={false}
-                        className={styles.audio}
-                      />
-                    </div>
-                  )}
-                  {phonetic.text && (
-                    <span className={styles.text}>{phonetic.text}</span>
-                  )}
-                </div>
-              );
-            })}
+            {dictionaryResults.phonetics?.map((phonetic, index) => (
+              <div className={styles.phonetic} key={index}>
+                {phonetic.audio && (
+                  <div
+                    onClick={() => handlePlaySound(phonetic.audio, index)}
+                    className={styles.audioContainer}
+                  >
+                    <Player
+                      src={AudioLottie}
+                      // ✅ Make sure the ref callback returns void
+                      ref={(el) => {
+                        animationRefs.current[index] = el;
+                      }}
+                      loop={false}
+                      autoplay={false}
+                      className={styles.audio}
+                    />
+                  </div>
+                )}
+                {phonetic.text && (
+                  <span className={styles.text}>{phonetic.text}</span>
+                )}
+              </div>
+            ))}
           </div>
+
           {dictionaryResults.meanings?.map((meaning, index) => (
             <div className={styles.meaningBlock} key={index}>
               <div className={styles.partOfSpeech}>{meaning.partOfSpeech}</div>
