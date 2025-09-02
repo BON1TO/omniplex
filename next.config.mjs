@@ -13,7 +13,7 @@ const nextConfig = {
   },
   transpilePackages: ["firebase"],
 
-  // 🚀 Add this
+  // ADDED THIS
   experimental: {
     optimizeCss: false,
     optimizePackageImports: [],
